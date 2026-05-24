@@ -1,6 +1,4 @@
-# 🐳 Déploiement d'une Architecture Multi-Conteneurs avec Docker
 
-**Module : Administration Systèmes Linux**  
 **Binôme : Chaimaa BENRADOUAN & Hiba BENGUARA**  
 **1ère Année Cycle Ingénieur — Génie Informatique & Intelligence Artificielle**
 
