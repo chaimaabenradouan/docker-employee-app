@@ -1,4 +1,6 @@
+# 🐳 Déploiement d'une Architecture Multi-Conteneurs avec Docker
 
+**Module : Systèmes d'Exploitation et Environnement de Développement**  
 **Binôme : Chaimaa BENRADOUAN & Hiba BENGUARA**  
 **1ère Année Cycle Ingénieur — Génie Informatique & Intelligence Artificielle**
 
@@ -54,40 +56,34 @@ docker-employee-app/
 > Node.js et Redis ne sont **PAS** installés sur la VM. Docker s'en charge via les images.
 
 ### 1. Mise à jour du système
-
 ```bash
 sudo apt update && sudo apt upgrade -y
 ```
 
 ### 2. Installation de Docker
-
 ```bash
 sudo apt install -y docker.io
 ```
 
 ### 3. Installation de Docker Compose V2
-
 ```bash
 sudo apt install -y docker-compose-v2
 docker compose version
 ```
 
 ### 4. Utiliser Docker sans sudo
-
 ```bash
 sudo usermod -aG docker $USER
 newgrp docker
 ```
 
 ### 5. Vérification
-
 ```bash
 docker run hello-world
 # Résultat : Hello from Docker! ✅
 ```
 
 ### 6. Création du dossier projet
-
 ```bash
 mkdir ~/docker-employee-app && cd ~/docker-employee-app
 ```
@@ -146,16 +142,8 @@ services:
 ## 🚀 Lancer le Projet
 
 ```bash
-# Se placer dans le dossier
 cd ~/docker-employee-app
-
-# Construire et lancer (première fois)
 sudo docker compose up --build
-
-# Lancer en arrière-plan
-sudo docker compose up -d --build
-
-# Accéder à l'application
 # → http://localhost:8080
 ```
 
@@ -164,10 +152,10 @@ sudo docker compose up -d --build
 ## 🛑 Arrêter le Projet
 
 ```bash
-# Arrêter les conteneurs (données Redis conservées)
+# Arrêter (données conservées)
 docker compose down
 
-# Arrêter ET supprimer les données Redis
+# Arrêter + supprimer les données Redis
 docker compose down -v
 ```
 
@@ -182,7 +170,7 @@ docker ps
 # Voir les logs en temps réel
 docker compose logs -f
 
-# Vérifier le compteur de visites dans Redis
+# Vérifier le compteur dans Redis
 docker exec -it redis-server redis-cli GET visits
 
 # Entrer dans le conteneur Node.js
@@ -194,10 +182,10 @@ docker compose exec web sh
 ## ✨ Fonctionnalités de l'Application
 
 - **Compteur de visites** : incrémenté à chaque requête sur `/` via `redisClient.incr('visits')`
-- **Lister les employés** : `GET /api/employees` — récupère tous les employés depuis Redis
-- **Ajouter un employé** : `POST /api/employees` — stocke dans Redis avec un UUID unique
-- **Modifier un employé** : `PUT /api/employees/:id` — met à jour les champs dans Redis
-- **Supprimer un employé** : `DELETE /api/employees/:id` — supprime de Redis
+- **Lister les employés** : `GET /api/employees`
+- **Ajouter un employé** : `POST /api/employees`
+- **Modifier un employé** : `PUT /api/employees/:id`
+- **Supprimer un employé** : `DELETE /api/employees/:id`
 
 ---
 
@@ -225,4 +213,3 @@ docker compose exec web sh
 | **Hiba BENGUARA** | 1ère Année Cycle Ingénieur — Génie Informatique & IA |
 
 *Travail réalisé en binôme — Année universitaire 2025/2026*
-
