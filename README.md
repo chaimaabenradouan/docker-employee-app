@@ -1,15 +1,16 @@
 # 🐳 Déploiement d'une Architecture Multi-Conteneurs avec Docker
 
-**Module : Administration Systèmes Linux**
-**Binôme : Chaimaa BENRADOUAN & Hiba BENGUARA**
+**Module : Administration Systèmes Linux**  
+**Binôme : Chaimaa BENRADOUAN & Hiba BENGUARA**  
 **1ère Année Cycle Ingénieur — Génie Informatique & Intelligence Artificielle**
 
 ---
 
 ## 🎯 Objectif
 
-Déployer une application web dynamique de gestion des employés en utilisant Docker.
+Déployer une application web dynamique de gestion des employés en utilisant Docker.  
 L'application est composée de deux services communicants :
+
 - Un serveur **Node.js + Express** (interface web + API REST)
 - Une base de données **Redis** (stockage des employés + compteur de visites)
 
@@ -17,15 +18,17 @@ L'application est composée de deux services communicants :
 
 ## 🏗️ Architecture
 
+```
 Navigateur → localhost:8080
-↓
-[Conteneur : employee-web]
-Node.js + Express (port 3000)
-↓ réseau Docker interne (app-network)
-[Conteneur : redis-server]
-Redis 7 (port 6379)
-↓
-[Volume : redis-data] (persistance)
+                  ↓
+     [Conteneur : employee-web]
+       Node.js + Express (port 3000)
+                  ↓ réseau Docker interne (app-network)
+     [Conteneur : redis-server]
+       Redis 7 (port 6379)
+                  ↓
+       [Volume : redis-data] (persistance)
+```
 
 | Service | Image | Port interne | Port hôte |
 |---|---|---|---|
@@ -36,48 +39,57 @@ Redis 7 (port 6379)
 
 ## 📁 Structure du Projet
 
+```
 docker-employee-app/
 ├── server.js            # Application Express : page HTML + API CRUD + compteur Redis
 ├── package.json         # Dépendances Node.js (express, redis, uuid)
 ├── Dockerfile           # Recette de construction de l'image Node.js
 ├── docker-compose.yml   # Orchestration des 2 services
+├── screenshots/         # Captures d'écran du projet
 └── README.md            # Ce fichier
+```
 
 ---
 
 ## 🛠️ Installation de l'Environnement (Ubuntu 24.04 — VirtualBox)
 
-> Node.js et Redis ne sont PAS installés sur la VM. Docker s'en charge via les images.
+> Node.js et Redis ne sont **PAS** installés sur la VM. Docker s'en charge via les images.
 
 ### 1. Mise à jour du système
+
 ```bash
 sudo apt update && sudo apt upgrade -y
 ```
 
 ### 2. Installation de Docker
+
 ```bash
 sudo apt install -y docker.io
 ```
 
 ### 3. Installation de Docker Compose V2
+
 ```bash
 sudo apt install -y docker-compose-v2
 docker compose version
 ```
 
 ### 4. Utiliser Docker sans sudo
+
 ```bash
 sudo usermod -aG docker $USER
 newgrp docker
 ```
 
 ### 5. Vérification
+
 ```bash
 docker run hello-world
 # Résultat : Hello from Docker! ✅
 ```
 
 ### 6. Création du dossier projet
+
 ```bash
 mkdir ~/docker-employee-app && cd ~/docker-employee-app
 ```
@@ -96,7 +108,7 @@ EXPOSE 3000               # Port écouté par Express
 CMD ["node", "server.js"] # Commande de démarrage
 ```
 
-**Optimisation :** En copiant `package.json` avant `server.js`, Docker met en cache
+**Optimisation des layers :** En copiant `package.json` avant `server.js`, Docker met en cache
 le layer `npm install`. Si on modifie uniquement le code, Docker réutilise ce cache
 et le build est beaucoup plus rapide.
 
@@ -108,26 +120,27 @@ et le build est beaucoup plus rapide.
 version: '3.8'
 
 networks:
-  app-network:          # Réseau privé isolé entre les deux conteneurs
+  app-network:            # Réseau privé isolé entre les deux conteneurs
     driver: bridge
 
 volumes:
-  redis-data:           # Volume nommé pour la persistance des données Redis
+  redis-data:             # Volume nommé pour la persistance des données Redis
     driver: local
 
 services:
+
   redis-server:
     image: redis:7-alpine
-    command: redis-server --appendonly yes   # Persistance AOF activée
+    command: redis-server --appendonly yes  # Persistance AOF activée
     volumes:
-      - redis-data:/data                     # Données sauvegardées sur disque
+      - redis-data:/data                    # Données sauvegardées sur disque
 
   web:
-    build: .                                 # Build depuis le Dockerfile local
+    build: .                                # Build depuis le Dockerfile local
     ports:
-      - "8080:3000"                          # Port hôte 8080 → conteneur 3000
+      - "8080:3000"                         # Port hôte 8080 → conteneur 3000
     depends_on:
-      - redis-server                         # Redis démarre avant Node.js
+      - redis-server                        # Redis démarre avant Node.js
 ```
 
 ---
@@ -145,7 +158,7 @@ sudo docker compose up --build
 sudo docker compose up -d --build
 
 # Accéder à l'application
-# http://localhost:8080
+# → http://localhost:8080
 ```
 
 ---
@@ -189,7 +202,6 @@ docker compose exec web sh
 - **Supprimer un employé** : `DELETE /api/employees/:id` — supprime de Redis
 
 ---
----
 
 ## 📸 Captures d'Écran
 
@@ -204,11 +216,15 @@ docker compose exec web sh
 
 ### Conteneurs actifs — docker ps
 ![docker ps](screenshots/image4.png)
+
+---
+
 ## 👩‍💻 Réalisé par
 
-| | |
+| Nom | Filière |
 |---|---|
-| **Chaimaa BENRADOUAN** | 1ère Année Cycle Ingénieur |
-| **Hiba BENGUARA** | Génie Informatique & IA |
+| **Chaimaa BENRADOUAN** | 1ère Année Cycle Ingénieur — Génie Informatique & IA |
+| **Hiba BENGUARA** | 1ère Année Cycle Ingénieur — Génie Informatique & IA |
 
 *Travail réalisé en binôme — Année universitaire 2025/2026*
+
